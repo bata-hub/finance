@@ -18,6 +18,26 @@ var uiController = (function() {
 
         getDOMstrings: function() {
             return DOMstrings;
+        },
+
+        addListItem: function(item, type) {
+            // Orlogo zarlagiin elementiig aguulsan html beltgene
+            var html, list;
+            if(type === 'inc'){
+                list = '.income__list';
+                html = '<div class="item clearfix" id="income-%id%"><div class="item__description">$$DESCRIPTION$$</div><div class="right clearfix"><div class="item__value">$$VALUE$$</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
+            } else {
+                list = '.expenses__list';
+                html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">$$DESCRIPTION$$</div><div class="right clearfix"><div class="item__value">$$VALUE$$</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
+            }
+            // html dotroo orlogo zarlagiin utguudiig REPLACE ashiglaj uurchilno
+            html = html.replace('%id%', item.id);
+            html = html.replace('$$DESCRIPTION$$', item.description);
+            html = html.replace('$$VALUE$$', item.value);
+            // html ee DOM ruu hiine
+
+            document.querySelector(list).insertAdjacentHTML('beforeend', html);
+
         }
     }
 }) ();
@@ -62,6 +82,8 @@ var financeController = (function() {
                 item = new Expense(id, desc, val);
             }
             data.items[type].push(item);
+
+            return item;
         },
         seeData: function(){
             return data;
@@ -73,9 +95,18 @@ var financeController = (function() {
 var appController = (function(uiCtrl, fnCtrl) {
 
     var ctrlAddItem = function() {
+        //1.oruulah ogogdliig delgetsees olj avna
         var input = uiController.getInput();
+
+        //2.Olj avsan ogogdluudee sanhuugiin controllert damjuulj hadgalna
         console.log(input);
-        financeController.addItem(input.type, input.description, input.value);
+        var item = financeController.addItem(input.type, input.description, input.value);
+        //3.olj avsan ogogdluudee web deeree tohiroh hesegt gargana
+        uiController.addListItem(item, input.type);
+
+        //4.Tosviig tootsoolno
+
+
     }
 
     
